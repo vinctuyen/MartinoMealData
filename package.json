@@ -1,0 +1,67 @@
+{
+  "name": "Meal-data",
+  "version": "0.15.0",
+  "description": "A redux saga integration for firebase.",
+  "author": "Nathan Gaberel <nathan@gnab.fr>",
+  "homepage": "https://github.com/n6g7/redux-saga-firebase",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "types": "./index.d.ts",
+  "scripts": {
+    "del": "rimraf dist",
+    "build": "yarn del && NODE_ENV=production babel src --out-dir dist",
+    "build:win": "yarn del&&set NODE_ENV=production&&babel src --out-dir dist",
+    "version": "cp -r docs/reference/{dev,v$(jq .version -r package.json)} && git add docs/reference/v$(jq .version -r package.json)",
+    "prepare": "yarn build",
+    "prepublishOnly": "yarn test",
+    "pretest": "yarn test:lint && yarn test:format && yarn test:ts",
+    "test": "NODE_ENV=test jest",
+    "test:coverage": "yarn test --coverage",
+    "test:coverage:win": "yarn test:win --coverage",
+    "test:format": "prettier -l \"src/**/*.js\"",
+    "test:lint": "eslint src",
+    "test:ts": "tsc",
+    "test:win": "set NODE_ENV=test&&jest"
+  },
+  "repository": {
+    "url": "git@github.com:n6g7/redux-saga-firebase.git",
+    "type": "git"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.4.4",
+    "redux-saga-firebase": "^0.15.0"
+  },
+  "peerDependencies": {
+    "firebase": "^5.0.4",
+    "redux-saga": "^1.0.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.4.4",
+    "@babel/core": "^7.4.4",
+    "@babel/plugin-transform-runtime": "^7.4.4",
+    "@babel/preset-env": "^7.4.4",
+    "@types/node": "^12.0.0",
+    "@types/redux": "^3.6.0",
+    "babel-core": "^7.0.0-0",
+    "babel-eslint": "^10.0.1",
+    "babel-jest": "^24.8.0",
+    "eslint": "^6.0.0",
+    "firebase": "^6.2.0",
+    "jest": "^24.8.0",
+    "prettier": "^1.17.0",
+    "redux-saga": "^1.0.2",
+    "rimraf": "^2.6.3",
+    "typescript": "^3.4.5",
+    "whatwg-fetch": "^3.0.0"
+  },
+  "jest": {
+    "coverageThreshold": {
+      "global": {
+        "branches": 95,
+        "functions": 95,
+        "lines": 95,
+        "statements": 95
+      }
+    }
+  }
+}

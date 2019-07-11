@@ -1,0 +1,167 @@
+version: 2
+
+jobs:
+  lib:
+    working_directory: ~/redux-saga-firebase
+
+    docker:
+      - image: node:10
+
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+            - rsf-{{ .Branch }}-{{ checksum "package.json" }}
+            - rsf-{{ .Branch }}
+            - rsf-master-{{ checksum "package.json" }}
+            - rsf-master
+
+      - run:
+          name: Install dependencies
+          command: yarn
+
+      - run:
+          name: Run tests
+          command: yarn test -- --coverage
+
+      - run:
+          name: Install coveralls
+          command: yarn global add coveralls
+
+      - run:
+          name: Send coverage to coveralls.io
+          command: |
+            if [ -z "$CIRCLE_PR_REPONAME" ];
+            then
+              cat coverage/lcov.info | coveralls;
+            fi
+
+      - save_cache:
+          key: rsf-{{ .Branch }}-{{ checksum "package.json" }}
+          paths:
+            - ~/.yarn
+            - ~/redux-saga-firebase/node_modules
+
+  demo:
+    working_directory: ~/redux-saga-firebase
+
+    docker:
+      - image: node:10
+
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+            - demo-{{ .Branch }}-{{ checksum "example/package.json" }}
+            - demo-{{ .Branch }}
+            - demo-master-{{ checksum "example/package.json" }}
+            - demo-master
+
+      - run:
+          name: Install dependencies
+          command: cd example && yarn
+
+      - run:
+          name: Run tests
+          command: cd example && yarn test
+
+      - save_cache:
+          key: demo-{{ .Branch }}-{{ checksum "example/package.json" }}
+          paths:
+            - ~/.yarn
+            - ~/redux-saga-firebase/example/node_modules
+
+  docs:
+    working_directory: ~/redux-saga-firebase
+
+    docker:
+      - image: node:10
+
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+            - docs-v1-{{ .Branch }}-{{ checksum "docs/package.json" }}
+            - docs-v1-{{ .Branch }}
+            - docs-v1-master-{{ checksum "docs/package.json" }}
+            - docs-v1-master
+
+      - run:
+          name: Install dependencies
+          command: cd docs && yarn
+
+      - run:
+          name: Run tests
+          command: cd docs && yarn test
+
+      - save_cache:
+          key: docs-v1-{{ .Branch }}-{{ checksum "docs/package.json" }}
+          paths:
+            - ~/.yarn
+            - ~/redux-saga-firebase/docs/node_modules
+
+  deploy-demo:
+    working_directory: ~/redux-saga-firebase
+
+    docker:
+      - image: node:10
+
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+            - deploy-{{ .Branch }}-{{ checksum "package.json" }}-{{ checksum "example/package.json" }}
+            - deploy-{{ .Branch }}
+            - deploy-master-{{ checksum "package.json" }}-{{ checksum "example/package.json" }}
+            - deploy-master
+
+      - run:
+          name: Install lib dependencies
+          command: yarn
+
+      - run:
+          name: Install demo dependencies
+          command: cd example && yarn
+
+      - run:
+          name: Install demo functions dependencies
+          command: cd example/functions && yarn
+
+      - run:
+          name: Build demo
+          command: cd example && yarn build
+
+      - run:
+          name: Install Firebase CLI
+          command: yarn global add firebase-tools
+
+      - run:
+          name: Deploy demo
+          command: cd example && yarn deploy --token "$FIREBASE_TOKEN"
+
+      - save_cache:
+          key: deploy-{{ .Branch }}-{{ checksum "package.json" }}-{{ checksum "example/package.json" }}
+          paths:
+            - ~/.yarn
+            - ~/redux-saga-firebase/node_modules
+            - ~/redux-saga-firebase/example/node_modules
+            - ~/redux-saga-firebase/example/functions/node_modules
+
+workflows:
+  version: 2
+  stack:
+    jobs:
+      - lib
+      - demo
+      - docs
+      - deploy-demo:
+          requires:
+            - demo
+          filters:
+            branches:
+              only:
+                - master

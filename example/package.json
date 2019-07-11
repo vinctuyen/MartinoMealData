@@ -1,0 +1,57 @@
+{
+  "name": "rsf-example",
+  "version": "0.0.1",
+  "description": "Example usage of redux-saga-firebase",
+  "license": "MIT",
+  "scripts": {
+    "build": "webpack -p --mode=production",
+    "deploy": "firebase deploy",
+    "dev": "webpack-dev-server --mode=development",
+    "test": "prettier -l \"src/**/*.js\""
+  },
+  "dependencies": {
+    "@firebase/firestore": "^1.4.3",
+    "firebase": "^5.11.1",
+    "prismjs": "^1.16.0",
+    "prop-types": "^15.7.2",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-ga": "^2.6.0",
+    "react-redux": "^7.1.0",
+    "redux": "^4.0.3",
+    "redux-saga": "^1.0.5",
+    "redux-saga-firebase": "file:..",
+    "semantic-ui-react": "^0.87.3",
+    "styled-components": "^4.3.2",
+    "whatwg-fetch": "^3.0.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.5.0",
+    "@babel/plugin-proposal-class-properties": "^7.5.0",
+    "@babel/plugin-proposal-json-strings": "^7.0.0",
+    "@babel/plugin-syntax-dynamic-import": "^7.0.0",
+    "@babel/plugin-syntax-import-meta": "^7.0.0",
+    "@babel/plugin-transform-runtime": "^7.5.0",
+    "@babel/polyfill": "^7.4.4",
+    "@babel/preset-env": "^7.4.5",
+    "@babel/preset-react": "^7.0.0",
+    "@babel/runtime": "^7.5.4",
+    "babel-core": "^7.0.0-bridge.0",
+    "babel-eslint": "^10.0.2",
+    "babel-loader": "^8.0.6",
+    "img-loader": "^3.0.1",
+    "prettier": "^1.18.2",
+    "raw-loader": "^3.0.0",
+    "url-loader": "^2.0.1",
+    "webpack": "^4.35.3",
+    "webpack-cli": "^3.3.5",
+    "webpack-dev-server": "^3.7.2"
+  },
+  "standard": {
+    "globals": [
+      "firebase",
+      "importScripts"
+    ],
+    "parser": "babel-eslint"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "rules": {
+    "todos": {
+      ".read": true,
+      ".write": true
+    }
+  }
+}
